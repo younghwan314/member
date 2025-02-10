@@ -18,23 +18,45 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberResponseDto postMember(MemberRequestDto memberRequestDto) {
-        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
+    public MemberResponseDto save(MemberRequestDto dto) {
+        Member member = new Member(dto.getEmail());
         Member savedMember = memberRepository.save(member);
-
-        return new MemberResponseDto(member.getId(), member.getEmail());
+        return new MemberResponseDto(savedMember.getId(), savedMember.getEmail());
     }
 
-    public List<MemberResponseDto> getMembers() {
+    @Transactional(readOnly = true)
+    public List<MemberResponseDto> findAll() {
         List<Member> members = memberRepository.findAll();
-        return members.stream()
-                .map(member -> new MemberResponseDto(member.getId(), member.getEmail())).toList();
+
+        List<MemberResponseDto> dtos = new ArrayList<>();
+        for (Member member : members) {
+            dtos.add(new MemberResponseDto(member.getId(), member.getEmail()));
+        }
+        return dtos;
     }
 
-    public MemberResponseDto getMember(Long id) {
+    @Transactional(readOnly = true)
+    public MemberResponseDto findById(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(
-                () -> new NullPointerException()
+                () -> new IllegalArgumentException("해당 id에 맞는 이메일이 없습니다.")
         );
         return new MemberResponseDto(member.getId(), member.getEmail());
+    }
+
+    @Transactional
+    public MemberResponseDto update(Long id, MemberRequestDto dto) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 id에 맞는 이메일이 없습니다.")
+        );
+        member.update(dto.getEmail());
+        return new MemberResponseDto(member.getId(), member.getEmail());
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        if (!memberRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 id에 맞는 이메일이 없습니다.");
+        }
+        memberRepository.deleteById(id);
     }
 }

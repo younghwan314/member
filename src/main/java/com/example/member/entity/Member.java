@@ -1,6 +1,9 @@
 package com.example.member.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,15 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
     private String email;
-    @Column
-    private String password;
 
-    public Member(String email, String password) {
+    public Member(String email) {
         this.email = email;
-        this.password = password;
+    }
+
+    public void update(String email) {
+        this.email = email;
     }
 }
