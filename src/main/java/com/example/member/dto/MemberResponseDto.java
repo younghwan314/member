@@ -3,13 +3,13 @@ package com.example.member.dto;
 import lombok.Getter;
 
 @Getter
-public class MemberSaveResponseDto {
+public class MemberResponseDto {
 
     private final Long id;
-    private final String name;
+    private final String email;
 
-    public MemberSaveResponseDto(Long id, String name) {
+    public MemberResponseDto(Long id, String email) {
         this.id = id;
-        this.name = name;
+        this.email = email;
     }
 }

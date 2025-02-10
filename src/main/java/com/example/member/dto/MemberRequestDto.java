@@ -3,7 +3,13 @@ package com.example.member.dto;
 import lombok.Getter;
 
 @Getter
-public class MemberSaveRequestDto {
+public class MemberRequestDto {
 
-    private String name;
+    private final String email;
+    private final String password;
+
+    public MemberRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
